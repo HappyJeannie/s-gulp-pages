@@ -1,7 +1,7 @@
 {
   "name": "s-gulp-pages",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "private": false,
   "description": "Always a pleasure scaffolding your awesome static sites.",
   "keywords": [
     "pages-boilerplate",
