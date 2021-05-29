@@ -1,5 +1,5 @@
 {
-  "name": "html-project",
+  "name": "s-gulp-pages",
   "version": "0.1.0",
   "private": true,
   "description": "Always a pleasure scaffolding your awesome static sites.",
@@ -8,13 +8,15 @@
     "boilerplate",
     "pages"
   ],
+  "main": "lib/index.js",
+  "bin": "bin/s-gulp-pages.js",
   "homepage": "",
   "bugs": {
     "url": ""
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/HappyJeannie/s-gulp-pages.git"
   },
   "license": "MIT",
   "author": {
@@ -32,11 +34,6 @@
     "not dead"
   ],
   "dependencies": {
-    "bootstrap": "4.4.1",
-    "jquery": "3.4.1",
-    "popper.js": "1.16.1"
-  },
-  "devDependencies": {
     "@babel/core": "^7.14.3",
     "@babel/preset-env": "^7.14.2",
     "browser-sync": "^2.26.14",
@@ -44,6 +41,7 @@
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
     "gulp-clean-css": "^4.3.0",
+    "gulp-cli": "^2.3.0",
     "gulp-htmlmin": "^5.0.1",
     "gulp-if": "^3.0.0",
     "gulp-imagemin": "^7.1.0",
@@ -55,5 +53,6 @@
   },
   "engines": {
     "node": ">=6"
-  }
+  },
+  "devDependencies": {}
 }
