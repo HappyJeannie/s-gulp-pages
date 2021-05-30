@@ -1,14 +1,14 @@
 # 使用 gulp 完成项目构建
 
-## 实现功能
+## 一、实现功能
 
 - [x] html 模版、sass/ES6+ 编译、images/fonts 压缩
 - [x] 资源压缩
 - [x] dev-server
 - [x] 指令合并
-- [ ] 发布到 npm，可通过指令构建
+- [x] 发布到 npm，可通过指令构建
 
-## 使用工具
+## 二、使用工具
 
 - html:
   - gulp-htmlmin：文件压缩
@@ -49,7 +49,7 @@
         - baseDir
         - routes
 
-## 实现步骤
+## 三、实现步骤
 
 ### 1. 样式编译
 
@@ -208,9 +208,9 @@ const bs = browserSync.create();
 
 // 创建一个任务用于启动服务器，并增加相应配置
 const serve = () => {
-	bs.init({
-  	server: {
-    	baseDir: "dist", //设置服务根目录
+ bs.init({
+   server: {
+     baseDir: "dist", //设置服务根目录
       routes: {
         // 设置后 html 文件中 node_modules 目录下的资源文件请求就会映射到项目目录的 node_modules
         // value 使用的是相对路径
@@ -300,13 +300,52 @@ const useref = () => {
 • dev
 • compile & build
 
+## 四、使用
 
-## 使用
+- yarn gulp dev
+- yarn gulp build
+- yarn gulp clean
 
-* yarn gulp dev
-* yarn guld build
-* yarn guld clean
- 
-### 封装工作流
+## 五、封装工作流
 
+### 1、目标
 
+- 提取 gulp，配合 yarn link 实现本地调试，修复执行异常
+- 抽象配置路径
+- 包装 gulp cli
+- 发布 & 应用
+
+### 2、过程
+
+#### 2.1 提取 gulp
+
+- 将步骤三中的 src、public 等资源文件单独提取到一个目录（项目目录）中，当前目录（模块目录）只保留 gulp 相关内容
+- package.json 中的非开发依赖移除，开发依赖改为 dependencies
+- 项目中新建 lib/index.js 并将 gulpfile.js 中文件全部复制到此文件后，可删除 gulpfile.js
+- package.json 中入口文件修改为 lib/index.js，使用 yarn link 将当前模块链接到全局
+- 在项目目录根目录中安装依赖 bootstrap jquery popper.js，并在根目录创建 gulpfile.js 文件，文件内中直接require打包模块
+- 暂时在项目目录中安装 gulp gulp-cli 指令，后续集成
+- 执行 yarn gulp build 等指令，修复其中的报错
+
+#### 2.2 抽象配置路径
+
+- 项目目录下创建 gulppages.config.js 其中内容结构与模块目录中 lib/index.js 中 pathConfig 保持一致
+- lib/index.js 尝试读取项目目录中配置，如果无则使用模块中默认配置，否则使用项目配置
+
+#### 2.3 指令化
+
+- 指令化需要在模块根目录下增加 bin/index.js 文件，并在 package.json 中指定 bin 执行文件。macos 中需要将 bin/index.js 改为 755 可执行文件。
+- bin/index.js 中需要完成的内容是模拟 gulp-cli 的构建指令：`yarn gulp build --gulfile gulpfile-path --cwd path`
+- 通过 process.argv 传入 gulpfile cwd 参数
+- 观察项目目录中 node_modules/.bin/gulp 执行的内容，仿照其引入 gulp-cli 即可。
+
+#### 2.4 发布
+
+- yarn publish --registry=https://registry.yarnpackage.com
+
+#### 2.5 使用
+
+- 由于 gulp-cli 已经集成到模块中，所以项目目录中可删除 gulp gulp-cli 依赖
+- yarn add -D [模块名称]
+- [模块名称] build：完成构建
+- 在 package.json 中添加 build dev clean 任务指令
